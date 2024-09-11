@@ -22,27 +22,29 @@ pipeline {
                 }
             }
         }
-        stage('build docker image - frontend') {
+        stage('read latest version') {
             steps {
                 script {
                     echo "${WORKSPACE}"
                     env.FRONTEND_VERSION = readFile "${WORKSPACE}/frontend/frontend_version.txt"
-                    dir('frontend') {
-                        sh "docker build -t sakula23/wanderlust_frontend:${env.FRONTEND_VERSION} ."
-                    }  
+                    env.BACKEND_VERSION = readFile "${WORKSPACE}/backend/backend_version.txt"
+                    echo "FRONTEND_VERSION= ${env.FRONTEND_VERSION} and BACKEND_VERSION= ${env.BACKEND_VERSION}"
                 }
-                
+            }
+        }
+        stage('build docker image - frontend') {
+            steps {
+                script {
+                    dir('frontend') 
+                    sh "docker build -t sakula23/wanderlust_frontend:${env.FRONTEND_VERSION} ."
+                }
             }
         }
         stage('build docker image - backend') {
             steps {
-
                 script {
-                    echo "${WORKSPACE}"
-                    env.BACKEND_VERSION = readFile "${WORKSPACE}/backend/backend_version.txt"
-                    dir('backend') {
-                        sh "docker build -t sakula23/wanderlust_backend:${env.BACKEND_VERSION} ."
-                    }  
+                    dir('backend')
+                    sh "docker build -t sakula23/wanderlust_backend:${env.BACKEND_VERSION} ."
                 }
             }
         }
