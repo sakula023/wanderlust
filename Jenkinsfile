@@ -8,8 +8,6 @@ pipeline {
     environment {
         SCANNER_HOME = tool 'sonar'
         DOCKERHUB_CREDENTIALS = credentials('dockerhubtoken')
-         //{sh 'echo $(cat /frontend/frontend_version.txt)'}
-     //{sh 'echo $(cat /backend/backend_version.txt)'}
     }
     stages {
         stage('code clone') {
